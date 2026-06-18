@@ -21,47 +21,36 @@
   <button onclick="send()">Send</button>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDcDE-q6zNL3uwsmiT2j7c-VmUAz4lhOes",
-      authDomain: "hellomanschat-7b8e3.firebaseapp.com",
-      projectId: "hellomanschat-7b8e3",
-      storageBucket: "hellomanschat-7b8e3.firebasestorage.app",
-      messagingSenderId: "1047577647625",
-      appId: "1:1047577647625:web:0e196d7c915212a1eeb6d8"
-    };
+  const firebaseConfig = {
+    databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com/"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const chatRef = ref(db, 'messages');
 
-    async function send() {
-      const msgInput = document.getElementById("msg");
-      const userInput = document.getElementById("username");
-      
-      if (msgInput.value.trim() !== "") {
-        await addDoc(collection(db, "messages"), { 
-          text: msgInput.value, 
-          username: userInput.value || "Anonymous", 
-          createdAt: serverTimestamp() 
-        });
-        msgInput.value = "";
-      }
+  window.send = function() {
+    let name = document.getElementById('username').value;
+    let msg = document.getElementById('msg').value;
+    if(msg.trim() !== "") {
+        push(chatRef, { name: name || "Anonymous", msg: msg });
+        document.getElementById('msg').value = '';
     }
-    window.send = send;
+  };
 
-    const q = query(collection(db, "messages"), orderBy("createdAt"));
-    onSnapshot(q, (snapshot) => {
-      let html = "";
-      snapshot.forEach((doc) => { 
-        const data = doc.data();
-        html += `<p><b>${data.username}:</b> ${data.text}</p>`; 
-      });
-      const chatDiv = document.getElementById("chat");
-      chatDiv.innerHTML = html;
-      chatDiv.scrollTop = chatDiv.scrollHeight;
-    });
-  </script>
+  onValue(chatRef, (snapshot) => {
+    let data = snapshot.val();
+    let list = document.getElementById('chat');
+    list.innerHTML = '';
+    for(let key in data) {
+      list.innerHTML += `<p><b>${data[key].name}:</b> ${data[key].msg}</p>`;
+    }
+  });
+</script>
+  
 </body>
 </html>
