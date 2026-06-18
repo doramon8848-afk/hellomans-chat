@@ -39,46 +39,44 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
     // Fill Dates
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    
     for (let i = 1; i <= 31; i++) {
-      let opt = document.createElement("option");
-      opt.value = i; opt.innerHTML = i;
+      let opt = document.createElement("option"); opt.value = i; opt.innerHTML = i;
       document.getElementById("reg-day").appendChild(opt);
     }
-    
     months.forEach((m, index) => {
-      let opt = document.createElement("option");
-      opt.value = index + 1; opt.innerHTML = m;
+      let opt = document.createElement("option"); opt.value = index + 1; opt.innerHTML = m;
       document.getElementById("reg-month").appendChild(opt);
     });
-
     for (let i = 2026; i >= 1970; i--) {
-      let opt = document.createElement("option");
-      opt.value = i; opt.innerHTML = i;
+      let opt = document.createElement("option"); opt.value = i; opt.innerHTML = i;
       document.getElementById("reg-year").appendChild(opt);
     }
 
-    // Firebase
+    // Firebase Init
     const app = initializeApp({
-      apiKey: "YOUR_FIREBASE_API_KEY",
+      apiKey: "AIzaSyDcDE-q6zNL3uwsmiT2j7c-VmUAz4lhOes",
       authDomain: "hellomanschat-7b8e3.firebaseapp.com",
       projectId: "hellomanschat-7b8e3",
-      storageBucket: "hellomanschat-7b8e3.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      storageBucket: "hellomanschat-7b8e3.firebasestorage.app",
+      messagingSenderId: "1047577647625",
+      appId: "1:1047577647625:web:0e196d7c915212a1eeb6d8"
     });
 
     const auth = getAuth(app);
+    const db = getDatabase(app);
 
     window.register = async () => {
       let email = document.getElementById('reg-email').value;
       let pass = document.getElementById('reg-pass').value;
+      let user = document.getElementById('reg-user').value;
 
       createUserWithEmailAndPassword(auth, email, pass)
         .then(() => {
+          set(ref(db, 'users/' + user), { email: email });
           alert("Registered successfully!");
           window.location.href = 'login.html';
         })
