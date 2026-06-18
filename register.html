@@ -40,6 +40,28 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
+    // Fill Dates
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    for (let i = 1; i <= 31; i++) {
+      let opt = document.createElement("option");
+      opt.value = i; opt.innerHTML = i;
+      document.getElementById("reg-day").appendChild(opt);
+    }
+    
+    months.forEach((m, index) => {
+      let opt = document.createElement("option");
+      opt.value = index + 1; opt.innerHTML = m;
+      document.getElementById("reg-month").appendChild(opt);
+    });
+
+    for (let i = 2026; i >= 1970; i--) {
+      let opt = document.createElement("option");
+      opt.value = i; opt.innerHTML = i;
+      document.getElementById("reg-year").appendChild(opt);
+    }
+
+    // Firebase
     const app = initializeApp({
       apiKey: "YOUR_FIREBASE_API_KEY",
       authDomain: "hellomanschat-7b8e3.firebaseapp.com",
@@ -64,4 +86,5 @@
     };
   </script>
 </body>
-</html>
+  </html>
+  
