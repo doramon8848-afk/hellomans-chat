@@ -36,52 +36,54 @@
   <p><a href="index.html" style="color:#e6a860; font-size: 0.8em;">Back to Home</a></p>
 </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
-    // Fill Dates
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    for (let i = 1; i <= 31; i++) {
-      let opt = document.createElement("option"); opt.value = i; opt.innerHTML = i;
-      document.getElementById("reg-day").appendChild(opt);
-    }
-    months.forEach((m, index) => {
-      let opt = document.createElement("option"); opt.value = index + 1; opt.innerHTML = m;
-      document.getElementById("reg-month").appendChild(opt);
-    });
-    for (let i = 2026; i >= 1970; i--) {
-      let opt = document.createElement("option"); opt.value = i; opt.innerHTML = i;
-      document.getElementById("reg-year").appendChild(opt);
-    }
+  const firebaseConfig = {
+    apiKey: "AIzaSyDcDE-q6zNL3uwsmiT2j7c-VmUAz4lhOes",
+    authDomain: "hellomanschat-7b8e3.firebaseapp.com",
+    databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com",
+    projectId: "hellomanschat-7b8e3",
+    storageBucket: "hellomanschat-7b8e3.firebasestorage.app",
+    messagingSenderId: "1047577647625",
+    appId: "1:1047577647625:web:0e196d7c915212a1eeb6d8",
+    measurementId: "G-1L2XG69H6F"
+  };
 
-    // Firebase Init
-    const app = initializeApp({
-      apiKey: "AIzaSyDcDE-q6zNL3uwsmiT2j7c-VmUAz4lhOes",
-      authDomain: "hellomanschat-7b8e3.firebaseapp.com",
-      projectId: "hellomanschat-7b8e3",
-      storageBucket: "hellomanschat-7b8e3.firebasestorage.app",
-      messagingSenderId: "1047577647625",
-      appId: "1:1047577647625:web:0e196d7c915212a1eeb6d8"
-    });
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
 
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+  // Fill Dates
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  for (let i = 1; i <= 31; i++) {
+    let opt = document.createElement("option"); opt.value = i; opt.innerHTML = i;
+    document.getElementById("reg-day").appendChild(opt);
+  }
+  months.forEach((m, index) => {
+    let opt = document.createElement("option"); opt.value = index + 1; opt.innerHTML = m;
+    document.getElementById("reg-month").appendChild(opt);
+  });
+  for (let i = 2026; i >= 1970; i--) {
+    let opt = document.createElement("option"); opt.value = i; opt.innerHTML = i;
+    document.getElementById("reg-year").appendChild(opt);
+  }
 
-    window.register = async () => {
-      let email = document.getElementById('reg-email').value;
-      let pass = document.getElementById('reg-pass').value;
-      let user = document.getElementById('reg-user').value;
+  window.register = async () => {
+    let email = document.getElementById('reg-email').value;
+    let pass = document.getElementById('reg-pass').value;
+    let user = document.getElementById('reg-user').value;
 
-      createUserWithEmailAndPassword(auth, email, pass)
-        .then(() => {
-          set(ref(db, 'users/' + user), { email: email });
-          alert("Registered successfully!");
-          window.location.href = 'login.html';
-        })
-        .catch((error) => alert(error.message));
-    };
-  </script>
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(() => {
+        set(ref(db, 'users/' + user), { email: email });
+        alert("Registered successfully!");
+        window.location.href = 'login.html';
+      })
+      .catch((error) => alert(error.message));
+  };
+</script>
 </body>
 </html>
