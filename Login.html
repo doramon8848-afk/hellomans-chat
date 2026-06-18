@@ -43,12 +43,13 @@
     let email = document.getElementById('log-email').value;
     let pass = document.getElementById('log-pass').value;
 
-    signInWithEmailAndPassword(auth, email, pass)
-      .then(() => {
-        alert("Login successful!");
-        window.location.assign('index.html'); 
-      })
-      .catch((error) => alert("Login failed: " + error.message));
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      alert("Login successful!");
+      window.location.replace('chat.html'); 
+    } catch (error) {
+      alert("Login failed: " + error.message);
+    }
   };
 </script>
 </body>
