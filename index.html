@@ -2,50 +2,61 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>HelloMansChat</title>
+  <title>HelloMansChat - Welcome</title>
   <style>
-    body { font-family: sans-serif; padding: 15px; background-color: #f4f4f9; }
-    #chat { height: 350px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: white; }
-    input { width: 100%; padding: 10px; margin-bottom: 8px; box-sizing: border-box; }
-    button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80');
+      background-size: cover;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    h1 { margin-bottom: 10px; }
+    .btn {
+      display: block;
+      width: 250px;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .login-btn { background: #5a9e2f; color: white; }
+    .guest-btn { background: #4a453f; color: white; }
+    .btn:hover { transform: scale(1.05); }
+    a { color: #ff6600; text-decoration: none; }
   </style>
 </head>
 <body>
-  <h2>HelloMansChat</h2>
-  <input type="text" id="username" placeholder="Enter your name...">
-  <div id="chat"></div>
-  <input type="text" id="msg" placeholder="Type a message...">
-  <button onclick="send()">Send</button>
+  <h1>HelloMansChat</h1>
+  <p>Welcome to The Chat.<br>Make new friends and share fun moments!</p>
+  
+  <a href="login.html" class="btn login-btn">Login</a>
+  
+  <button class="btn guest-btn" onclick="guestLogin()">Guest login</button>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+  <p>New here? <a href="register.html">Register now</a></p>
 
-    const firebaseConfig = {
-      databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com/"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const chatRef = ref(db, 'messages');
-
-    window.send = function() {
-      let name = document.getElementById('username').value;
-      let msg = document.getElementById('msg').value;
-      if(msg.trim() !== "") {
-          push(chatRef, { name: name || "Anonymous", msg: msg });
-          document.getElementById('msg').value = '';
+  <script>
+    function guestLogin() {
+      let user = prompt("Enter a nickname to join as a guest:");
+      if (user && user.trim() !== "") {
+        localStorage.setItem('username', user);
+        window.location.href = 'chat.html';
+      } else {
+        alert("Please enter a valid nickname!");
       }
-    };
-
-    onValue(chatRef, (snapshot) => {
-      let data = snapshot.val();
-      let list = document.getElementById('chat');
-      list.innerHTML = '';
-      for(let key in data) {
-        list.innerHTML += `<p><b>${data[key].name}:</b> ${data[key].msg}</p>`;
-      }
-    });
+    }
   </script>
 </body>
 </html>
