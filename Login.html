@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - HelloMansChat</title>
+  <style>
+    body { background: #0f0a14; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
+    input { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #550033; background: #1a0a1a; color: white; }
+    button { width: 100%; max-width: 300px; padding: 12px; background: #5a9e2f; color: white; border: none; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Login</h2>
+  <input type="text" id="log-user" placeholder="Username">
+  <input type="password" id="log-pass" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p><a href="index.html" style="color:#ff6699;">Back to Home</a></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const db = getDatabase(initializeApp({ databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com/" }));
+
+    window.login = async () => {
+      let user = document.getElementById('log-user').value.trim();
+      let pass = document.getElementById('log-pass').value.trim();
+      
+      const snapshot = await get(child(ref(db), 'users/' + user));
+      if (snapshot.exists() && snapshot.val().password === pass) {
+        localStorage.setItem('username', user);
+        window.location.href = 'chat.html'; // This redirects you to the chat
+      } else {
+        alert("Invalid username or password!");
+      }
+    };
+  </script>
+</body>
+</html>
