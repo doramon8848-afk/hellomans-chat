@@ -3,38 +3,63 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - HelloMansChat</title>
+  <title>Login</title>
   <style>
-    body { background: #0f0a14; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
-    input { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #550033; background: #1a0a1a; color: white; }
-    button { width: 100%; max-width: 300px; padding: 12px; background: #5a9e2f; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    body { background: #121212; color: #ccc; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .card { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #333; text-align: center; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; }
+    .btn-login { width: 100%; padding: 12px; background: #e6a860; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: black; margin-top: 10px; }
+    a { color: #888; text-decoration: none; font-size: 0.9em; }
   </style>
 </head>
 <body>
+
+<div class="card">
   <h2>Login</h2>
-  <input type="text" id="log-user" placeholder="Username">
+  <input type="text" id="log-email" placeholder="Username/Email">
   <input type="password" id="log-pass" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <p><a href="index.html" style="color:#ff6699;">Back to Home</a></p>
+  
+  <button class="btn-login" onclick="login()">➔ Login</button>
+  <p><a href="#">Forgot password?</a></p>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-    const db = getDatabase(initializeApp({ databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com/" }));
+  const app = initializeApp({
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "hellomanschat-7b8e3.firebaseapp.com",
+    projectId: "hellomanschat-7b8e3",
+    storageBucket: "hellomanschat-7b8e3.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  });
 
-    window.login = async () => {
-      let user = document.getElementById('log-user').value.trim();
-      let pass = document.getElementById('log-pass').value.trim();
-      
-      const snapshot = await get(child(ref(db), 'users/' + user));
-      if (snapshot.exists() && snapshot.val().password === pass) {
-        localStorage.setItem('username', user);
-        window.location.href = 'chat.html'; // This redirects you to the chat
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+
+  window.login = async () => {
+    let input = document.getElementById('log-email').value;
+    let pass = document.getElementById('log-pass').value;
+    let email = input;
+
+    if (!input.includes("@")) {
+      const snapshot = await get(child(ref(db), 'users/' + input));
+      if (snapshot.exists()) {
+        email = snapshot.val().email;
       } else {
-        alert("Invalid username or password!");
+        alert("Username not found!");
+        return;
       }
-    };
-  </script>
+    }
+
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(() => window.location.href = 'chat.html')
+      .catch((error) => alert("Login failed: " + error.message));
+  };
+</script>
 </body>
 </html>
+
