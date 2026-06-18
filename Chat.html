@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HelloMansChat</title>
+  <style>
+    body { background: #0f0a14; color: #d0c0d0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
+    #room-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .room-btn { background: #2d102d; color: #ff6699; border: 1px solid #660033; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+    #chat { height: 50vh; overflow-y: scroll; background: rgba(30, 10, 30, 0.6); border: 1px solid #550033; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
+    .msg-bubble { background: #2d102d; padding: 8px; margin: 6px 0; border-radius: 8px; border-left: 3px solid #ff0055; }
+    input { width: 100%; padding: 10px; background: #1a0a1a; color: white; border: 1px solid #660033; border-radius: 8px; box-sizing: border-box; }
+    button.send-btn { width: 100%; padding: 10px; background: #800020; color: white; border: none; border-radius: 8px; margin-top: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h3>HelloMansChat</h3>
+  <div id="room-bar">
+    <button class="room-btn" onclick="switchRoom('Main')">Main</button>
+    <button class="room-btn" onclick="switchRoom('Depression')">Depression</button>
+    <button class="room-btn" onclick="switchRoom('Music')">Music</button>
+    <button class="room-btn" onclick="switchRoom('Art')">Art</button>
+    <button class="room-btn" onclick="switchRoom('Developers')">Developers</button>
+  </div>
+  <div id="chat"></div>
+  <input type="text" id="msg" placeholder="Type a message...">
+  <button class="send-btn" onclick="send()">Send</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, off } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const db = getDatabase(initializeApp({ databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com/" }));
+    
+    let user = localStorage.getItem('username');
+    if(!user) { user = prompt("Enter your username:") || "Anonymous"; localStorage.setItem('username', user); }
+
+    let currentRef = null;
+    window.switchRoom = (room) => {
+      if(currentRef) off(currentRef);
+      document.getElementById('chat').innerHTML = '';
+      currentRef = ref(db, 'rooms/' + room);
+      onValue(currentRef, (snapshot) => {
+        let list = document.getElementById('chat');
+        list.innerHTML = '';
+        snapshot.forEach((child) => {
+          list.innerHTML += `<div class="msg-bubble"><b>${child.val().name}:</b> ${child.val().msg}</div>`;
+        });
+        list.scrollTop = list.scrollHeight;
+      });
+    };
+
+    window.send = () => {
+      let m = document.getElementById('msg');
+      if(m.value.trim() !== "") {
+        push(currentRef, { name: user, msg: m.value });
+        m.value = '';
+      }
+    };
+    switchRoom('Main');
+  </script>
+</body>
+</html>
