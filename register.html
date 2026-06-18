@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - HelloMansChat</title>
+  <style>
+    body { background: #0f0a14; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
+    input { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #550033; background: #1a0a1a; color: white; }
+    button { width: 100%; max-width: 300px; padding: 12px; background: #800020; color: white; border: none; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Register</h2>
+  <input type="email" id="reg-email" placeholder="Email">
+  <input type="password" id="reg-pass" placeholder="Password">
+  <button onclick="register()">Register</button>
+  <p><a href="index.html" style="color:#ff6699;">Back to Home</a></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const app = initializeApp({
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "hellomanschat-7b8e3.firebaseapp.com",
+      projectId: "hellomanschat-7b8e3",
+      storageBucket: "hellomanschat-7b8e3.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    });
+
+    const auth = getAuth(app);
+
+    window.register = async () => {
+      let email = document.getElementById('reg-email').value;
+      let pass = document.getElementById('reg-pass').value;
+
+      createUserWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+          alert("Registered successfully!");
+          window.location.href = 'login.html';
+        })
+        .catch((error) => alert(error.message));
+    };
+  </script>
+</body>
+</html>
