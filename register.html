@@ -5,17 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - HelloMansChat</title>
   <style>
-    body { background: #0f0a14; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
-    input { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #550033; background: #1a0a1a; color: white; }
-    button { width: 100%; max-width: 300px; padding: 12px; background: #800020; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    body { background: #121212; color: #ccc; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .card { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #333; }
+    input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; }
+    .date-group { display: flex; gap: 5px; }
+    button { width: 100%; padding: 12px; background: #e6a860; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; color: black; }
   </style>
 </head>
 <body>
+
+<div class="card">
   <h2>Register</h2>
-  <input type="email" id="reg-email" placeholder="Email">
+  <input type="text" id="reg-user" placeholder="Username">
   <input type="password" id="reg-pass" placeholder="Password">
+  <input type="email" id="reg-email" placeholder="Email">
+  
+  <select id="reg-gender">
+    <option>Male</option>
+    <option>Female</option>
+  </select>
+  
+  <label style="font-size: 0.8em;">Birth date</label>
+  <div class="date-group">
+    <select id="reg-day"><option>Day</option></select>
+    <select id="reg-month"><option>Month</option></select>
+    <select id="reg-year"><option>Year</option></select>
+  </div>
+  
   <button onclick="register()">Register</button>
-  <p><a href="index.html" style="color:#ff6699;">Back to Home</a></p>
+  <p><a href="index.html" style="color:#e6a860; font-size: 0.8em;">Back to Home</a></p>
+</div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
