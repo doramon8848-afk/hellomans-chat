@@ -3,60 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Login - HelloMansChat</title>
   <style>
     body { background: #121212; color: #ccc; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-    .card { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #333; text-align: center; }
+    .card { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #333; }
     input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; }
-    .btn-login { width: 100%; padding: 12px; background: #e6a860; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: black; margin-top: 10px; }
-    a { color: #888; text-decoration: none; font-size: 0.9em; }
+    button { width: 100%; padding: 12px; background: #e6a860; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; color: black; }
   </style>
 </head>
 <body>
 
 <div class="card">
   <h2>Login</h2>
-  <input type="text" id="log-email" placeholder="Username/Email">
+  <input type="email" id="log-email" placeholder="Email">
   <input type="password" id="log-pass" placeholder="Password">
-  
-  <button class="btn-login" onclick="login()">➔ Login</button>
-  <p><a href="#">Forgot password?</a></p>
+  <button onclick="login()">Login</button>
+  <p><a href="register.html" style="color:#e6a860; font-size: 0.8em;">Don't have an account? Register</a></p>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-  const app = initializeApp({
-    apiKey: "YOUR_FIREBASE_API_KEY",
+  const firebaseConfig = {
+    apiKey: "AIzaSyDcDE-q6zNL3uwsmiT2j7c-VmUAz4lhOes",
     authDomain: "hellomanschat-7b8e3.firebaseapp.com",
+    databaseURL: "https://hellomanschat-7b8e3-default-rtdb.firebaseio.com",
     projectId: "hellomanschat-7b8e3",
-    storageBucket: "hellomanschat-7b8e3.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  });
+    storageBucket: "hellomanschat-7b8e3.firebasestorage.app",
+    messagingSenderId: "1047577647625",
+    appId: "1:1047577647625:web:0e196d7c915212a1eeb6d8",
+    measurementId: "G-1L2XG69H6F"
+  };
 
+  const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getDatabase(app);
 
   window.login = async () => {
-    let input = document.getElementById('log-email').value;
+    let email = document.getElementById('log-email').value;
     let pass = document.getElementById('log-pass').value;
-    let email = input;
-
-    if (!input.includes("@")) {
-      const snapshot = await get(child(ref(db), 'users/' + input));
-      if (snapshot.exists()) {
-        email = snapshot.val().email;
-      } else {
-        alert("Username not found!");
-        return;
-      }
-    }
 
     signInWithEmailAndPassword(auth, email, pass)
-      .then(() => window.location.href = 'chat.html')
+      .then(() => {
+        alert("Login successful!");
+        window.location.href = 'index.html'; 
+      })
       .catch((error) => alert("Login failed: " + error.message));
   };
 </script>
